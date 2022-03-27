@@ -1,0 +1,18 @@
+/* macro stopping the code when a dataset is empty */
+
+%macro StopIfEmpty(data);
+  options notes;
+  
+  proc sql noprint;
+    select *
+      from &data;
+    %let N = &sqlobs;
+  quit;
+  
+  %if &N = 0 %then
+    %do;
+      %abort cancel;
+    %end;
+%mend;
+
+%StopIfEmpty(newData);
